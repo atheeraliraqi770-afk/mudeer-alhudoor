@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "employees": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'manager'"
+    },
+    "attendance": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "loans": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'manager'"
+    },
+    "payments": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'manager'"
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'manager')",
+        ".write": false
+      }
+    },
+    "audit": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'manager'",
+      ".write": "auth != null"
+    }
+  }
+}

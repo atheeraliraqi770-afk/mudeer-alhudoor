@@ -1,0 +1,1 @@
+Note: This basic scaffold uses the appassets URL but should be updated to AndroidX WebViewAssetLoader before production. See README_AR.md. The current URL mapping is not provided by default WebView and therefore will not load until MainActivity is changed to use WebViewAssetLoader.

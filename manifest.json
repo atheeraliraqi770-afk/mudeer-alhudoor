@@ -1,0 +1,12 @@
+{
+  "name": "مدير الحضور",
+  "short_name": "مدير الحضور",
+  "description": "إدارة الموظفين والحضور والأجور والقروض",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#168df0",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": []
+}

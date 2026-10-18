@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#168df0"><meta name="description" content="مدير الحضور لإدارة الموظفين والحضور والأجور والقروض">
+<link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css">
+<title>مدير الحضور</title>
+</head>
+<body>
+<header class="topbar"><div class="brand"><div class="logo">✓</div><div><strong>مدير الحضور</strong><small>إدارة الموظفين</small></div></div><button id="logoutBtn" class="ghost hidden">تسجيل الخروج</button></header>
+<main>
+<section id="loginView" class="login-card">
+  <div class="hero-logo">✓</div><h1>مدير الحضور</h1><p class="muted">سجّل الدخول لإدارة الحضور والأجور</p>
+  <form id="loginForm"><label>البريد الإلكتروني<input id="email" type="email" required autocomplete="username" placeholder="name@example.com"></label><label>كلمة المرور<input id="password" type="password" required autocomplete="current-password" minlength="6"></label><button class="primary full" type="submit">تسجيل الدخول</button></form>
+  <p class="hint">يلزم إعداد Firebase في ملف app.js قبل الاستخدام السحابي.</p>
+</section>
+<section id="appView" class="hidden">
+  <div class="page-head"><div><h1 id="pageTitle">الرئيسية</h1><p id="todayLabel" class="muted"></p></div><span id="connection" class="status">غير متصل</span></div>
+  <nav class="tabs">
+    <button data-page="dashboard" class="tab active">الرئيسية</button><button data-page="employees" class="tab">الموظفون</button><button data-page="attendance" class="tab">الحضور</button><button data-page="payroll" class="tab">الأجور والقروض</button><button data-page="reports" class="tab">التقارير</button>
+  </nav>
+  <section id="dashboardPage" class="page">
+    <div class="stats">
+      <article class="stat"><span>إجمالي الموظفين</span><b id="statEmployees">0</b><i>👥</i></article>
+      <article class="stat"><span>حاضر اليوم</span><b id="statPresent">0</b><i class="green">✓</i></article>
+      <article class="stat"><span>غائب اليوم</span><b id="statAbsent">0</b><i class="red">●</i></article>
+      <article class="stat"><span>إجمالي القروض المتبقية</span><b id="statLoans">0 د.ع</b><i>▤</i></article>
+    </div>
+    <div class="panel"><div class="panel-head"><h2>تسجيل حضور اليوم</h2><button class="primary" data-goto="attendance">فتح سجل الحضور</button></div><div id="quickAttendance" class="quick-list"></div></div>
+    <div class="panel"><h2>ملخص مالي</h2><div class="financial"><div><span>الأجور التقديرية</span><b id="statWages">0 د.ع</b></div><div><span>صافي المستحقات</span><b id="statNet">0 د.ع</b></div></div></div>
+  </section>
+  <section id="employeesPage" class="page hidden">
+    <div class="panel"><div class="panel-head"><h2>قائمة الموظفين</h2><button id="addEmployeeBtn" class="primary">＋ إضافة موظف</button></div><div id="employeeList"></div></div>
+    <div id="employeeFormPanel" class="panel hidden"><h2 id="employeeFormTitle">إضافة موظف</h2><form id="employeeForm" class="form-grid">
+      <input type="hidden" id="employeeId"><label>اسم الموظف<input id="employeeName" required></label><label>رقم الهاتف<input id="employeePhone" inputmode="tel"></label><label>نوع الأجر<select id="payType"><option value="daily">أجر يومي</option><option value="monthly">راتب شهري</option></select></label><label>قيمة الأجر (دينار)<input id="payAmount" type="number" min="0" required></label><label>تاريخ المباشرة<input id="startDate" type="date"></label><label>ملاحظات<input id="employeeNotes"></label><div class="form-actions"><button class="primary" type="submit">حفظ البيانات</button><button type="button" class="secondary" id="cancelEmployee">إلغاء</button></div></form></div>
+  </section>
+  <section id="attendancePage" class="page hidden">
+    <div class="panel"><div class="panel-head"><h2>تسجيل الحضور والانصراف</h2><label class="inline-label">التاريخ<input id="attendanceDate" type="date"></label></div><p class="muted small">أيام العمل من السبت إلى الخميس. الجمعة عطلة أسبوعية.</p><div id="attendanceList"></div></div>
+  </section>
+  <section id="payrollPage" class="page hidden">
+    <div class="panel"><div class="panel-head"><h2>الأجور والسلف والقروض</h2><button id="addLoanBtn" class="primary">＋ إضافة سلفة / قرض</button></div><div id="payrollList"></div></div>
+    <div id="loanFormPanel" class="panel hidden"><h2>إضافة سلفة أو قرض</h2><form id="loanForm" class="form-grid"><label>الموظف<select id="loanEmployee" required></select></label><label>المبلغ (دينار)<input id="loanAmount" type="number" min="1" required></label><label>النوع<select id="loanType"><option value="loan">قرض</option><option value="advance">سلفة</option></select></label><label>التاريخ<input id="loanDate" type="date" required></label><label class="wide">ملاحظات<input id="loanNotes"></label><div class="form-actions"><button class="primary" type="submit">حفظ</button><button type="button" class="secondary" id="cancelLoan">إلغاء</button></div></form></div>
+    <div class="panel"><h2>تسجيل دفعة قرض</h2><form id="paymentForm" class="form-grid"><label>القرض<select id="paymentLoan" required></select></label><label>مبلغ الدفعة<input id="paymentAmount" type="number" min="1" required></label><label>التاريخ<input id="paymentDate" type="date" required></label><label>ملاحظات<input id="paymentNotes"></label><div class="form-actions"><button class="primary" type="submit">تسجيل الدفعة</button></div></form></div>
+  </section>
+  <section id="reportsPage" class="page hidden">
+    <div class="panel"><h2>إنشاء تقرير</h2><form id="reportForm" class="form-grid"><label>نوع التقرير<select id="reportType"><option value="daily">الحضور اليومي</option><option value="weekly">الحضور الأسبوعي</option><option value="monthly">الحضور الشهري</option><option value="absence">الغياب</option><option value="payroll">الأجور والمستحقات</option><option value="loans">القروض والسلف</option></select></label><label>الموظف<select id="reportEmployee"><option value="all">جميع الموظفين</option></select></label><label>من تاريخ<input id="reportFrom" type="date" required></label><label>إلى تاريخ<input id="reportTo" type="date" required></label><div class="form-actions"><button class="primary" type="submit">إنشاء التقرير</button><button type="button" class="secondary" id="exportPdf">تصدير / حفظ PDF</button></div></form><div id="reportOutput"></div></div>
+  </section>
+  <footer>مدير الحضور · العملة دينار عراقي (IQD)</footer>
+</section>
+</main>
+<div id="toast" class="toast hidden"></div>
+<script type="module" src="app.js"></script>
+</body></html>
